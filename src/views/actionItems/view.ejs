@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Action Item</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <div class="container">
+        <h1>Action Item Details</h1>
+        <% if (actionItem) { %>
+            <p><strong>ID:</strong> <%= actionItem.id %></p>
+            <p><strong>Incident Title:</strong> <%= actionItem.incidentTitle %></p>
+            <p><strong>Action Item:</strong> <%= actionItem.actionItem %></p>
+            <p><strong>Assigned To:</strong> <%= actionItem.assignedTo || 'Unassigned' %></p>
+            <p><strong>Due Date:</strong> <%= actionItem.dueDate ? new Date(actionItem.dueDate).toLocaleDateString() : 'N/A' %></p>
+            <a href="/incidents/view/<%= actionItem.incidentId %>" class="btn btn-primary">View Incident</a>
+        <% } else { %>
+            <p>Action Item not found.</p>
+        <% } %>
+        <a href="/action-items" class="btn btn-secondary">Back to Action Items</a>
+    </div>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>
