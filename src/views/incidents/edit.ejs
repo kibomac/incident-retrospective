@@ -9,28 +9,30 @@
 <body>
     <%- include('../partials/header') %> <!-- Include the header partial -->
 
-    <div class="container">
-        <h1>Edit Incident</h1>
-        <% if (incident) { %>
-            <form action="/incidents/edit/<%= incident.id %>" method="POST">
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" id="title" name="title" value="<%= incident.title %>" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" required><%= incident.description %></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="root_cause">Root Cause</label>
-                    <input type="text" id="root_cause" name="root_cause" value="<%= incident.root_cause %>" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Update</button>
-            </form>
-        <% } else { %>
-            <p>Incident not found.</p>
-        <% } %>
-    </div>
+    <main>
+        <div> class="container">
+            <h1>Edit Incident</h1>
+            <% if (incident) { %>
+                <form action="/incidents/edit/<%= incident.id %>" method="POST">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" value="<%= incident.title %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" required><%= incident.description %></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="root_cause">Root Cause</label>
+                        <input type="text" id="root_cause" name="root_cause" value="<%= incident.root_cause %>" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            <% } else { %>
+                <p>Incident not found.</p>
+            <% } %>
+        </div>
+    </main>
 
     <%- include('../partials/footer') %> <!-- Include the footer partial -->
 </body>

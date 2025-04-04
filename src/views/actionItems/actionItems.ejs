@@ -9,40 +9,42 @@
 <body>
     <%- include('../partials/header') %>
 
-    <div class="container">
-        <h1>Action Items</h1>
-        <a href="/action-items/create" class="btn btn-primary">Create New Action Item</a>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Incident ID</th>
-                    <th>Action Item</th>
-                    <th>Assigned To</th>
-                    <th>Due Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% actionItems.forEach(actionItem => { %>
+    <main>
+        <div class="container">
+            <h1>Action Items</h1>
+            <a href="/action-items/create" class="btn btn-primary">Create New Action Item</a>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td><%= actionItem.id %></td>
-                        <td><%= actionItem.incidentId %></td>
-                        <td><%= actionItem.actionItem %></td>
-                        <td><%= actionItem.assignedTo %></td>
-                        <td><%= actionItem.dueDate ? new Date(actionItem.dueDate).toLocaleDateString() : 'N/A' %></td>
-                        <td>
-                            <a href="/action-items/view/<%= actionItem.id %>" class="btn btn-view">View</a>
-                            <a href="/action-items/edit/<%= actionItem.id %>" class="btn btn-edit">Edit</a>
-                            <form action="/action-items/delete/<%= actionItem.id %>" method="POST" style="display:inline;">
-                                <button type="submit" class="btn btn-delete">Delete</button>
-                            </form>
-                        </td>
+                        <th>ID</th>
+                        <th>Incident ID</th>
+                        <th>Action Item</th>
+                        <th>Assigned To</th>
+                        <th>Due Date</th>
+                        <th>Actions</th>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <% actionItems.forEach(actionItem => { %>
+                        <tr>
+                            <td><%= actionItem.id %></td>
+                            <td><%= actionItem.incidentId %></td>
+                            <td><%= actionItem.actionItem %></td>
+                            <td><%= actionItem.assignedTo %></td>
+                            <td><%= actionItem.dueDate ? new Date(actionItem.dueDate).toLocaleDateString() : 'N/A' %></td>
+                            <td>
+                                <a href="/action-items/view/<%= actionItem.id %>" class="btn btn-view">View</a>
+                                <a href="/action-items/edit/<%= actionItem.id %>" class="btn btn-edit">Edit</a>
+                                <form action="/action-items/delete/<%= actionItem.id %>" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
     <%- include('../partials/footer') %>
 </body>

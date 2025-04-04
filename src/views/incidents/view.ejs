@@ -9,19 +9,21 @@
 <body>
     <%- include('../partials/header') %> <!-- Include the header partial -->
 
-    <div class="container">
-        <h1>Incident Details</h1>
-        <% if (incident) { %>
-            <p><strong>ID:</strong> <%= incident.id %></p>
-            <p><strong>Title:</strong> <%= incident.title %></p>
-            <p><strong>Description:</strong> <%= incident.description %></p>
-            <p><strong>Root Cause:</strong> <%= incident.root_cause %></p>
-            <p><strong>Date:</strong> <%= new Date(incident.createdAt).toLocaleDateString() %></p>
-        <% } else { %>
-            <p>Incident not found.</p>
-        <% } %>
-        <a href="/incidents" class="btn btn-secondary">Back to Incidents</a>
-    </div>
+    <main>
+        <div class="container">
+            <h1>Incident Details</h1>
+            <% if (incident) { %>
+                <p><strong>ID:</strong> <%= incident.id %></p>
+                <p><strong>Title:</strong> <%= incident.title %></p>
+                <p><strong>Description:</strong> <%= incident.description %></p>
+                <p><strong>Root Cause:</strong> <%= incident.root_cause %></p>
+                <p><strong>Date:</strong> <%= new Date(incident.createdAt).toLocaleDateString() %></p>
+            <% } else { %>
+                <p>Incident not found.</p>
+            <% } %>
+            <a href="/incidents" class="btn btn-secondary">Back to Incidents</a>
+        </div>
+    </main>
 
     <%- include('../partials/footer') %> <!-- Include the footer partial -->
 </body>

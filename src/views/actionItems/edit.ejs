@@ -9,34 +9,36 @@
 <body>
     <%- include('../partials/header') %> <!-- Include the header partial -->
 
-    <div class="container">
-        <h1>Edit Action Item</h1>
-        <% if (actionItem) { %>
-            <form action="/action-items/edit/<%= actionItem.id %>" method="POST">
-                <div class="form-group">
-                    <label for="incidentTitle">Incident Title:</label>
-                    <input type="text" id="incidentTitle" value="<%= actionItem.incidentTitle %>" required>
-                </div>
-                <div class="form-group">
-                    <label for="actionItem">Action Item:</label>
-                    <textarea id="actionItem" name="actionItem" required><%= actionItem.actionItem %></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="assignedTo">Assigned To:</label>
-                    <input type="text" id="assignedTo" name="assignedTo" value="<%= actionItem.assignedTo %>">
-                </div>
-                <div class="form-group">
-                    <label for="dueDate">Due Date:</label>
-                    <input type="date" id="dueDate" name="dueDate" value="<%= actionItem.dueDate ? actionItem.dueDate.toISOString().split('T')[0] : '' %>">
-                </div>
-                <button type="submit" class="btn btn-primary">Update Action Item</button>
-            </form>
-            <a href="/incidents/view/<%= actionItem.incidentId %>" class="btn btn-primary">View Incident</a>
-        <% } else { %>
-            <p>Action Item not found.</p>
-        <% } %>
-        <a href="/action-items" class="btn btn-secondary">Back to Action Items</a>
-    </div>
+    <main>
+        <div class="container">
+            <h1>Edit Action Item</h1>
+            <% if (actionItem) { %>
+                <form action="/action-items/edit/<%= actionItem.id %>" method="POST">
+                    <div class="form-group">
+                        <label for="incidentTitle">Incident Title:</label>
+                        <input type="text" id="incidentTitle" value="<%= actionItem.incidentTitle %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="actionItem">Action Item:</label>
+                        <textarea id="actionItem" name="actionItem" required><%= actionItem.actionItem %></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignedTo">Assigned To:</label>
+                        <input type="text" id="assignedTo" name="assignedTo" value="<%= actionItem.assignedTo %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="dueDate">Due Date:</label>
+                        <input type="date" id="dueDate" name="dueDate" value="<%= actionItem.dueDate ? actionItem.dueDate.toISOString().split('T')[0] : '' %>">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Action Item</button>
+                </form>
+                <a href="/incidents/view/<%= actionItem.incidentId %>" class="btn btn-primary">View Incident</a>
+            <% } else { %>
+                <p>Action Item not found.</p>
+            <% } %>
+            <a href="/action-items" class="btn btn-secondary">Back to Action Items</a>
+        </div>
+    </main>
 
     <%- include('../partials/footer') %> <!-- Include the footer partial -->
 </body>

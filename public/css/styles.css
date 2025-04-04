@@ -19,8 +19,8 @@ body {
 
 /* Header */
 header {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #007bff; /* Blue background for readability */
+    color: #fff; /* White text for contrast */
     padding: 1rem 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -28,9 +28,9 @@ header {
 header .navbar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
+    align-items: right;
+    max-width: 90%; /* Matches the content width */
+    margin: 0 auto; /* Centers the navbar */
     padding: 0 1rem;
 }
 
@@ -49,13 +49,13 @@ header .nav-links {
 
 header .nav-links a {
     text-decoration: none;
-    color: #fff;
+    color: #040404; /* White text for readability */
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 header .nav-links a:hover {
-    color: #ffdd57;
+    color: #ffdd57; /* Highlighted yellow on hover */
 }
 
 /* Footer */

@@ -9,35 +9,37 @@
 <body>
     <%- include('partials/header') %> <!-- Include the header partial -->
 
-    <div class="container">
-        <h1>Incidents</h1>
-        <a href="/incidents/create" class="btn btn-primary">Log New Incident</a> <!-- Link to Create Incident -->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Root Cause</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% incidents.forEach(incident => { %>
+    <main>
+        <div class="container">
+            <h1>Incidents</h1>
+            <a href="/incidents/create" class="btn btn-primary">Log New Incident</a> <!-- Link to Create Incident -->
+            <table class="table">
+                <thead>
                     <tr>
-                        <td><%= incident.id %></td>
-                        <td><%= incident.title %></td>
-                        <td><%= incident.root_cause %></td>
-                        <td><%= new Date(incident.createdAt).toLocaleDateString() %></td>
-                        <td>
-                            <a href="/incidents/view/<%= incident.id %>" class="btn btn-view">View</a> <!-- Link to View Incident -->
-                            <a href="/incidents/edit/<%= incident.id %>" class="btn btn-edit">Edit</a> <!-- Link to Edit Incident -->
-                        </td>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Root Cause</th>
+                        <th>Date</th>
+                        <th>Actions</th>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <% incidents.forEach(incident => { %>
+                        <tr>
+                            <td><%= incident.id %></td>
+                            <td><%= incident.title %></td>
+                            <td><%= incident.root_cause %></td>
+                            <td><%= new Date(incident.createdAt).toLocaleDateString() %></td>
+                            <td>
+                                <a href="/incidents/view/<%= incident.id %>" class="btn btn-view">View</a> <!-- Link to View Incident -->
+                                <a href="/incidents/edit/<%= incident.id %>" class="btn btn-edit">Edit</a> <!-- Link to Edit Incident -->
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
     <%- include('partials/footer') %> <!-- Include the footer partial -->
 </body>
