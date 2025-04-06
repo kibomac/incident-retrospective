@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Incident</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script defer src="/js/createIncident.js"></script> <!-- Link to the JavaScript file -->
 </head>
 <body>
     <%- include('../partials/header') %> <!-- Include the header partial -->
@@ -22,9 +23,13 @@
                     <textarea id="description" name="description" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="root_cause">Root Cause</label>
-                    <input type="text" id="root_cause" name="root_cause" required>
+                    <label for="rootCause">Root Cause:</label>
+                    <select id="rootCause" name="root_cause" required>
+                        <option value="" disabled selected>Select a root cause</option>
+                        <!-- Options will be dynamically populated by JavaScript -->
+                    </select>
                 </div>
+                
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

@@ -25,6 +25,67 @@ export const updateIncident = async (id, data) => {
     await db.query('UPDATE incidents SET title = ?, description = ?, root_cause = ? WHERE id = ?', [title, description, root_cause, id]);
 };
 
+export const getIncidentsByMonth = async () => {
+    try {
+        const [rows] = await db.query(`
+            SELECT 
+                DATE_FORMAT(created_at, '%Y-%m') AS month, 
+                COUNT(*) AS count 
+            FROM incidents 
+            GROUP BY month 
+            ORDER BY month
+        `);
+        return rows; // Return the grouped data
+    } catch (error) {
+        console.error('Error fetching incidents by month:', error);
+        throw error;
+    }
+};
+
+export const getIncidentsByRootCause = async () => {
+    try {
+        const [rows] = await db.query(`
+            SELECT root_cause, COUNT(*) AS count
+            FROM incidents
+            GROUP BY root_cause
+            ORDER BY count DESC
+        `);
+        return rows; // Return the grouped data
+    } catch (error) {
+        console.error('Error fetching incidents by root cause:', error);
+        throw error;
+    }
+};
+
+export const getIncidentsByStatus = async () => {
+    try {
+        const [rows] = await db.query(`
+            SELECT status, COUNT(*) AS count
+            FROM action_items
+            GROUP BY status
+        `);
+        return rows; // Return the grouped data
+    } catch (error) {
+        console.error('Error fetching incidents by status:', error);
+        throw error;
+    }
+};
+
+export const getIncidentsByAssignee = async () => {
+    try {
+        const [rows] = await db.query(`
+            SELECT assigned_to AS assignee, COUNT(*) AS count
+            FROM action_items
+            GROUP BY assigned_to
+            ORDER BY count DESC
+        `);
+        return rows; // Return the grouped data
+    } catch (error) {
+        console.error('Error fetching incidents by assignee:', error);
+        throw error;
+    }
+};
+
 export const getActionItems = async () => {
     try {
         const [rows] = await db.query(`

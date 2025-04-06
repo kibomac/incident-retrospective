@@ -1,5 +1,6 @@
 import express from 'express';
-import { getIncidents, createIncident, getIncidentById, updateIncident, getActionItems, getActionItemById } from './controllers.js';
+import { getIncidents, createIncident, getIncidentById, updateIncident, getActionItems, getActionItemById, getIncidentsByMonth, getIncidentsByRootCause, getIncidentsByStatus, getIncidentsByAssignee } from './controllers.js';
+import { getRootCauses, getIncidentStatuses } from './config.js';
 
 const router = express.Router();
 
@@ -141,6 +142,82 @@ router.post('/action-items/delete/:id', async (req, res) => {
         res.redirect('/action-items');
     } catch (error) {
         console.error('Error deleting action item:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// API route to fetch incidents grouped by month
+router.get('/api/incidents', async (req, res) => {
+    try {
+        const incidentsByMonth = await getIncidentsByMonth(); // Use the exported function
+        res.json(incidentsByMonth); // Send the data as JSON
+    } catch (error) {
+        console.error('Error fetching incidents by month:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// API route to fetch incidents grouped by root cause
+router.get('/api/incidents/root-cause', async (req, res) => {
+    try {
+        const rootCauseData = await getIncidentsByRootCause(); // Use the function from controllers.js
+        res.json(rootCauseData); // Send the data as JSON
+    } catch (error) {
+        console.error('Error fetching incidents by root cause:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// API route to fetch incidents grouped by status
+router.get('/api/incidents/status', async (req, res) => {
+    try {
+        const statusData = await getIncidentsByStatus(); // Use the function from controllers.js
+        res.json(statusData); // Send the data as JSON
+    } catch (error) {
+        console.error('Error fetching incidents by status:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// API route to fetch action items grouped by assignee
+router.get('/api/action-items/assignee', async (req, res) => {
+    try {
+        const assigneeData = await getIncidentsByAssignee(); // Use the function from controllers.js
+        res.json(assigneeData); // Send the data as JSON
+    } catch (error) {
+        console.error('Error fetching action items by assignee:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// API route to fetch root causes
+router.get('/api/root-causes', (req, res) => {
+    try {
+        const rootCauses = getRootCauses();
+        res.json(rootCauses); // Send the root causes as JSON
+    } catch (error) {
+        console.error('Error fetching root causes:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// API route to fetch incident statuses
+router.get('/api/incident-statuses', (req, res) => {
+    try {
+        const statuses = getIncidentStatuses();
+        res.json(statuses); // Send the statuses as JSON
+    } catch (error) {
+        console.error('Error fetching incident statuses:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Route to render the dashboard page
+router.get('/dashboard', async (req, res) => {
+    try {
+        res.render('dashboard', { title: 'Dashboard' }); // Render the dashboard view
+    } catch (error) {
+        console.error('Error rendering dashboard:', error);
         res.status(500).send('Internal Server Error');
     }
 });

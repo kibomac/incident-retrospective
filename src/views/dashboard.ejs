@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Retrospective Charts</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    <main>
+        <div class="container">
+            <h1>Dashboard</h1>
+            <nav>
+                <ul>
+                    <li><a href="#incidentChart">Monthly Incidents</a></li>
+                    <li><a href="#rootCauseChart">Incidents by Root Cause</a></li>
+                    <li><a href="#statusChart">Incidents by Status</a></li>
+                    <li><a href="#assigneeChart">Action Items by Assignee</a></li>
+                </ul>
+            </nav>
+            <div class="chart-container">
+                <canvas id="incidentChart"></canvas> <!-- Monthly Incidents Chart -->
+            </div>
+            <div class="chart-container">
+                <canvas id="rootCauseChart"></canvas> <!-- Incidents by Root Cause -->
+            </div>
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas> <!-- Incidents by Status -->
+            </div>
+            <div class="chart-container">
+                <canvas id="assigneeChart"></canvas> <!-- Action Items by Assignee -->
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/charts.js"></script>
+</body>
+</html>
