@@ -10,8 +10,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'src/views')); // Correct path to the views directory
 
 // Middleware
-app.use(express.json());
+app.use(express.json());// For parsing JSON
 app.use(express.static(path.join(path.resolve(), 'public')));
+app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded form data
+
 
 // Routes
 app.use('/', routes);

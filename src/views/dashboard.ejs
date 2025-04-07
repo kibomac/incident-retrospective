@@ -23,7 +23,17 @@
                 <canvas id="incidentChart"></canvas> <!-- Monthly Incidents Chart -->
             </div>
             <div class="chart-container">
-                <canvas id="rootCauseChart"></canvas> <!-- Incidents by Root Cause -->
+                <canvas id="rootCauseChart"></canvas> <!-- Incidents by Root Cause -->                import { getReports } from './controllers.js';
+                
+                router.get('/dashboard', async (req, res) => {
+                    try {
+                        const reports = await getReports(); // Fetch reports from the database
+                        res.render('dashboard', { reports });
+                    } catch (error) {
+                        console.error('Error rendering dashboard:', error);
+                        res.status(500).send('Internal Server Error');
+                    }
+                });
             </div>
             <div class="chart-container">
                 <canvas id="statusChart"></canvas> <!-- Incidents by Status -->

@@ -21,8 +21,17 @@ router.get('/incidents', async (req, res) => {
 });
 
 // Route to render the create incident page
-router.get('/incidents/create', (req, res) => {
-    res.render('incidents/create', { title: 'Create Incident' }); // Updated path
+router.get('/incidents/create', async (req, res) => {
+    try {
+        // Fetch root causes
+        const rootCauses = getRootCauses();
+
+        // Render the create page with the required data
+        res.render('incidents/create', { rootCauses });
+    } catch (error) {
+        console.error('Error rendering create page:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 // Route to handle creating a new incident
@@ -39,13 +48,23 @@ router.post('/incidents/create', async (req, res) => {
 // Route to render the edit incident page
 router.get('/incidents/edit/:id', async (req, res) => {
     try {
-        const incident = await getIncidentById(req.params.id); // Fetch the incident by ID
+        const { id } = req.params;
+
+        // Fetch the incident by ID
+        const incident = await getIncidentById(id);
+
         if (!incident) {
-            return res.status(404).send('Incident not found');
+            return res.status(404).render('404', { title: 'Incident Not Found' });
         }
-        res.render('incidents/edit', { title: 'Edit Incident', incident }); // Pass the incident to the template
+
+        // Fetch root causes and statuses
+        const rootCauses = getRootCauses();
+        const statuses = getIncidentStatuses();
+
+        // Render the edit page with the required data
+        res.render('incidents/edit', { incident, rootCauses, statuses });
     } catch (error) {
-        console.error('Error fetching incident:', error);
+        console.error('Error rendering edit page:', error);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -53,8 +72,16 @@ router.get('/incidents/edit/:id', async (req, res) => {
 // Route to handle updating an incident
 router.post('/incidents/edit/:id', async (req, res) => {
     try {
-        await updateIncident(req.params.id, req.body);
-        res.redirect('/incidents');
+        console.log(req.body); // Log the form data
+        const { title, description, root_cause, status } = req.body; // Extract form data
+        const { id } = req.params;
+
+        if (!title || !description || !root_cause || !status) {
+            throw new Error('Missing required fields');
+        }
+
+        await updateIncident(id, { title, description, root_cause, status });
+        res.redirect('/incidents'); // Redirect after successful update
     } catch (error) {
         console.error('Error updating incident:', error);
         res.status(500).send('Internal Server Error');

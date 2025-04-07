@@ -20,9 +20,15 @@ export const getIncidentById = async (id) => {
     }
 };
 
-export const updateIncident = async (id, data) => {
-    const { title, description, root_cause } = data;
-    await db.query('UPDATE incidents SET title = ?, description = ?, root_cause = ? WHERE id = ?', [title, description, root_cause, id]);
+export const updateIncident = async (id, { title, description, root_cause }) => {
+    const query = `
+        UPDATE incidents
+        SET title = ?, description = ?, root_cause = ?
+        WHERE id = ?
+    `;
+    const values = [title, description, root_cause, id];
+
+    await db.query(query, values);
 };
 
 export const getIncidentsByMonth = async () => {
