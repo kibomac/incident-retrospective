@@ -1,4 +1,4 @@
-import db from './db.js'; // Ensure this points to your database connection file
+import db from '../db.js'; // Ensure this points to your database connection file
 import { faker } from '@faker-js/faker'; // Use the updated faker package
 import { getRootCauses, getIncidentStatuses, getActionItemStatuses, getUsers } from './config.js'; // Import utility functions
 

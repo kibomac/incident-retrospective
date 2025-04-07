@@ -148,3 +148,8 @@ export const updateActionItem = async (id, data) => {
 export const deleteActionItem = async (id) => {
     await db.query('DELETE FROM action_items WHERE id = ?', [id]);
 };
+
+export const getUserByUsername = async (username) => {
+    const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+    return rows[0]; // Return the first user or undefined if not found
+};

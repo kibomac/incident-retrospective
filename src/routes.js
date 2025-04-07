@@ -1,5 +1,18 @@
 import express from 'express';
-import { getIncidents, createIncident, getIncidentById, updateIncident, getActionItems, getActionItemById, getIncidentsByMonth, getIncidentsByRootCause, getIncidentsByStatus, getIncidentsByAssignee } from './controllers.js';
+import bcrypt from 'bcrypt';
+import {
+    getIncidents,
+    createIncident,
+    getIncidentById,
+    updateIncident,
+    getActionItems,
+    getActionItemById,
+    getIncidentsByMonth,
+    getIncidentsByRootCause,
+    getIncidentsByStatus,
+    getIncidentsByAssignee,
+    getUserByUsername, // Ensure this is imported
+} from './controllers.js';
 import { getRootCauses, getIncidentStatuses } from './config.js';
 
 const router = express.Router();
@@ -245,6 +258,47 @@ router.get('/dashboard', async (req, res) => {
         res.render('dashboard', { title: 'Dashboard' }); // Render the dashboard view
     } catch (error) {
         console.error('Error rendering dashboard:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Route to render the login page
+router.get('/login', (req, res) => {
+    res.render('login', { error: null });
+});
+
+// Route to handle login
+router.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Fetch user by username
+        const user = await getUserByUsername(username);
+
+        if (!user) {
+            return res.render('login', { error: 'Invalid username or password' });
+        }
+
+        // Compare the provided password with the hashed password in the database
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.render('login', { error: 'Invalid username or password' });
+        }
+
+        // Store user information in the session (or JWT if applicable)
+        req.session.user = { id: user.id, username: user.username, role: user.role };
+
+        // Redirect based on user role
+        if (user.role === 'admin_user') {
+            res.redirect('/dashboard');
+        } else if (user.role === 'engineer') {
+            res.redirect('/dashboard');
+        } else {
+            res.redirect('/dashboard');
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
         res.status(500).send('Internal Server Error');
     }
 });
