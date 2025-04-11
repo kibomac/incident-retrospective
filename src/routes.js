@@ -288,6 +288,10 @@ router.get('/api/incident-statuses', (req, res) => {
     }
 });
 
+router.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', uptime: process.uptime() });
+});
+
 router.get('/logout', (req, res) => {
     req.session.destroy(() => {
         res.redirect('/');

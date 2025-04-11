@@ -33,3 +33,21 @@ export const getUsers = () => {
     }
     return users.split(','); // Split the comma-separated string into an array
 };
+
+export const config = {
+    rateLimit: {
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 100, // Limit each IP to 100 requests per windowMs
+        message: 'Too many requests from this IP, please try again later.',
+    },
+    session: {
+        secret: process.env.SECRET_KEY || 'your-secret-key',
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            secure: process.env.NODE_ENV === 'production',
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+        },
+    },
+};
