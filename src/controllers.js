@@ -148,3 +148,26 @@ export const fetchFilteredIncidents = async (filters) => {
     const [incidents] = await db.query(query, params);
     return incidents;
 };
+
+export const fetchFilteredActionItems = async (filters) => {
+    const { assignedTo, incidentId, dueDate } = filters;
+
+    let query = 'SELECT * FROM action_items WHERE 1=1';
+    const params = [];
+
+    if (assignedTo) {
+        query += ' AND assigned_to LIKE ?';
+        params.push(`%${assignedTo}%`);
+    }
+    if (incidentId) {
+        query += ' AND incident_id = ?';
+        params.push(incidentId);
+    }
+    if (dueDate) {
+        query += ' AND due_date = ?';
+        params.push(dueDate);
+    }
+
+    const [actionItems] = await db.query(query, params);
+    return actionItems;
+};

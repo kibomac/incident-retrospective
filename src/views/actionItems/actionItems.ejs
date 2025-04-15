@@ -11,8 +11,41 @@
 
     <main>
         <div class="container">
-            <h1>Action Items</h1>
-            <a href="/action-items/create" class="btn btn-primary">Create New Action Item</a>
+            <div class="header-actions">
+                <h1>Action Items</h1>
+                <a href="/action-items/create" class="btn btn-primary">Create New Action Item</a>
+            </div>
+
+            <!-- Filters Section -->
+            <form id="filtersForm" action="/action-items" method="GET" class="filters-form">
+                <div class="form-group">
+                    <label for="assignedTo">Assigned To:</label>
+                    <input type="text" id="assignedTo" name="assignedTo" placeholder="Enter assignee name" value="<%= assignedTo || '' %>">
+                </div>
+                <div class="form-group">
+                    <label for="incidentId">Incident ID:</label>
+                    <input type="number" id="incidentId" name="incidentId" placeholder="Enter Incident ID" value="<%= incidentId || '' %>">
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" id="dueDate" name="dueDate" value="<%= dueDate || '' %>">
+                </div>
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status">
+                        <option value="">All</option>
+                        <% statuses.forEach(statusOption => { %>
+                            <option value="<%= statusOption %>" <%= statusOption === selectedStatus ? 'selected' : '' %>><%= statusOption %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a href="/action-items" class="btn btn-secondary">Clear Filters</a>
+                </div>
+            </form>
+
+            <!-- Action Items Table -->
             <table class="table">
                 <thead>
                     <tr>
@@ -21,26 +54,34 @@
                         <th>Action Item</th>
                         <th>Assigned To</th>
                         <th>Due Date</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% actionItems.forEach(actionItem => { %>
+                    <% if (actionItems.length > 0) { %>
+                        <% actionItems.forEach(actionItem => { %>
+                            <tr>
+                                <td><%= actionItem.id %></td>
+                                <td><%= actionItem.incident_id %></td>
+                                <td><%= actionItem.action_item %></td>
+                                <td><%= actionItem.assigned_to %></td>
+                                <td><%= actionItem.due_date ? new Date(actionItem.due_date).toLocaleDateString('en-GB') : 'N/A' %></td>
+                                <td><%= actionItem.status %></td>
+                                <td>
+                                    <a href="/action-items/view/<%= actionItem.id %>" class="btn btn-view">View</a>
+                                    <a href="/action-items/edit/<%= actionItem.id %>" class="btn btn-edit">Edit</a>
+                                    <form action="/action-items/delete/<%= actionItem.id %>" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-delete">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
                         <tr>
-                            <td><%= actionItem.id %></td>
-                            <td><%= actionItem.incidentId %></td>
-                            <td><%= actionItem.actionItem %></td>
-                            <td><%= actionItem.assignedTo %></td>
-                            <td><%= actionItem.dueDate ? new Date(actionItem.dueDate).toLocaleDateString() : 'N/A' %></td>
-                            <td>
-                                <a href="/action-items/view/<%= actionItem.id %>" class="btn btn-view">View</a>
-                                <a href="/action-items/edit/<%= actionItem.id %>" class="btn btn-edit">Edit</a>
-                                <form action="/action-items/delete/<%= actionItem.id %>" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn btn-delete">Delete</button>
-                                </form>
-                            </td>
+                            <td colspan="7">No action items found.</td>
                         </tr>
-                    <% }) %>
+                    <% } %>
                 </tbody>
             </table>
         </div>

@@ -1,5 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+dotenv.config();
 import {
     getIncidents,
     createIncident,
@@ -13,6 +15,7 @@ import {
     getIncidentsByAssignee,
     getUserByUsername,
     fetchFilteredIncidents,
+    fetchFilteredActionItems,
 } from './controllers.js';
 import { getRootCauses, getIncidentStatuses } from './config.js';
 import { ensureAuthenticated } from './middleware/auth.js';
@@ -138,8 +141,21 @@ router.get('/incidents/view/:id', async (req, res, next) => {
 
 router.get('/action-items', async (req, res, next) => {
     try {
-        const actionItems = await getActionItems();
-        res.render('actionItems/actionItems', { title: 'Action Items', actionItems });
+        const { assignedTo, incidentId, dueDate, status } = req.query;
+
+        const statuses = process.env.ACTION_ITEM_STATUSES.split(',');
+
+        const actionItems = await fetchFilteredActionItems({ assignedTo, incidentId, dueDate, status });
+
+        res.render('actionItems/actionItems', {
+            title: 'Action Items',
+            actionItems,
+            assignedTo,
+            incidentId,
+            dueDate,
+            statuses,
+            selectedStatus: status,
+        });
     } catch (error) {
         next(error);
     }
