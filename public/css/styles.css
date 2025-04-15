@@ -19,8 +19,8 @@ body {
 
 /* Header */
 header {
-    background-color: #007bff; /* Blue background for readability */
-    color: #fff; /* White text for contrast */
+    background-color: #007bff;
+    color: #fff;
     padding: 1rem 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -29,8 +29,8 @@ header .navbar {
     display: flex;
     justify-content: space-between;
     align-items: right;
-    max-width: 90%; /* Matches the content width */
-    margin: 0 auto; /* Centers the navbar */
+    max-width: 90%;
+    margin: 0 auto;
     padding: 0 1rem;
 }
 
@@ -49,19 +49,19 @@ header .nav-links {
 
 header .nav-links a {
     text-decoration: none;
-    color: #040404; /* White text for readability */
+    color: #040404;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 header .nav-links a:hover {
-    color: #ffdd57; /* Highlighted yellow on hover */
+    color: #ffdd57;
 }
 
 /* Footer */
 footer {
-    background-color: #333; /* Dark background for readability */
-    color: #fff; /* White text for contrast */
+    background-color: #333;
+    color: #fff;
     text-align: center;
     padding: 1rem 0;
     font-size: 0.9rem;
@@ -71,12 +71,12 @@ footer {
 }
 
 footer a {
-    color: #ffdd57; /* Highlighted link color */
+    color: #ffdd57;
     text-decoration: none;
 }
 
 footer a:hover {
-    color: #ffd700; /* Slightly darker yellow on hover */
+    color: #ffd700;
 }
 
 /* Container */
@@ -161,34 +161,187 @@ a:hover {
     color: #0056b3;
 }
 
-/* Table Styling */
+/* Universal Table Styling */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
+    margin-top: 20px;
+    background-color: #fff; /* Ensure a consistent background */
+    border: 1px solid #ddd; /* Add a border around the table */
+    border-radius: 5px; /* Optional: Add rounded corners */
+    overflow: hidden; /* Ensure rounded corners apply to the entire table */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for a clean look */
 }
 
-table th, table td {
-    padding: 0.8rem;
-    text-align: left;
-    border: 1px solid #ddd;
+table th,
+table td {
+    padding: 12px 15px; /* Consistent padding for all cells */
+    text-align: left; /* Align text to the left */
+    border-bottom: 1px solid #ddd; /* Add a border between rows */
 }
 
 table th {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #007bff; /* Consistent header background color */
+    color: #fff; /* White text for headers */
+    font-weight: bold;
+    text-transform: uppercase; /* Optional: Make headers uppercase */
+    font-size: 14px;
 }
 
 table tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f9f9f9; /* Light gray background for even rows */
 }
 
 table tr:hover {
-    background-color: #e9ecef;
+    background-color: #f1f1f1; /* Slightly darker gray for hover effect */
+}
+
+table .btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+table .btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+table .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+table .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+table .btn-secondary:hover {
+    background-color: #5a6268;
 }
 
 /* Sticky Footer */
 main {
-    flex: 1; /* Ensures the main content takes up available space */
+    flex: 1;
+}
+
+/* Filters Form Styling */
+.filters-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.filters-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filters-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.filters-form input,
+.filters-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filters-form .btn-container {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: auto;
+}
+
+.filters-form .btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 38px;
+    box-sizing: border-box;
+}
+
+.filters-form .btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.filters-form .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.filters-form .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filters-form {
+        grid-template-columns: 1fr;
+    }
+
+    .filters-form .btn-container {
+        grid-column: span 1;
+        flex-direction: column;
+    }
+
+    .filters-form .btn {
+        width: 100%;
+    }
+}
+
+/* Incidents Table */
+.incidents-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.incidents-table th,
+.incidents-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.incidents-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.incidents-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.incidents-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.incidents-table .btn {
+    padding: 5px 10px;
+    font-size: 12px;
 }
 

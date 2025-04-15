@@ -16,3 +16,15 @@ export const passUserToViews = (req, res, next) => {
     res.locals.user = req.session.user || null;
     next();
 };
+
+export const addHelpersToViews = (req, res, next) => {
+    res.locals.formatDate = (date) => {
+        const d = new Date(date);
+        return d.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+    };
+    next();
+};
