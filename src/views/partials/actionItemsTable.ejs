@@ -1,0 +1,36 @@
+<h2>Associated Action Items</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Action Item</th>
+            <th>Assigned To</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (actionItems.length > 0) { %>
+            <% actionItems.forEach(actionItem => { %>
+                <tr>
+                    <td><%= actionItem.id %></td>
+                    <td><%= actionItem.action_item %></td>
+                    <td><%= actionItem.assigned_to %></td>
+                    <td><%= actionItem.due_date ? new Date(actionItem.due_date).toLocaleDateString('en-GB') : 'N/A' %></td>
+                    <td><%= actionItem.status %></td>
+                    <td>
+                        <a href="/action-items/edit/<%= actionItem.id %>" class="btn btn-edit">Edit</a>
+                        <form action="/action-items/delete/<%= actionItem.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } else { %>
+            <tr>
+                <td colspan="6">No action items found.</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

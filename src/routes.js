@@ -5,6 +5,7 @@ dotenv.config();
 import {
     getIncidents,
     createIncident,
+    createActionItem,
     getIncidentById,
     updateIncident,
     getActionItems,
@@ -16,6 +17,7 @@ import {
     getUserByUsername,
     fetchFilteredIncidents,
     fetchFilteredActionItems,
+    fetchActionItemsByIncidentId,
 } from './controllers.js';
 import { getRootCauses, getIncidentStatuses } from './config.js';
 import { ensureAuthenticated } from './middleware/auth.js';
@@ -105,7 +107,19 @@ router.get('/incidents/edit/:id', async (req, res, next) => {
 
         const rootCauses = getRootCauses();
         const statuses = getIncidentStatuses();
-        res.render('incidents/edit', { incident, rootCauses, statuses });
+        const actionItemStatuses = process.env.ACTION_ITEM_STATUSES.split(',');
+
+        // Fetch associated action items
+        const actionItems = await fetchActionItemsByIncidentId(id);
+
+        res.render('incidents/edit', {
+            title: 'Edit Incident',
+            incident,
+            rootCauses,
+            statuses,
+            actionItemStatuses,
+            actionItems,
+        });
     } catch (error) {
         next(error);
     }
@@ -129,11 +143,21 @@ router.post('/incidents/edit/:id', async (req, res, next) => {
 
 router.get('/incidents/view/:id', async (req, res, next) => {
     try {
-        const incident = await getIncidentById(req.params.id);
+        const { id } = req.params;
+
+        const incident = await getIncidentById(id);
+
+        const actionItems = await fetchActionItemsByIncidentId(id);
+
         if (!incident) {
-            return res.status(404).send('Incident not found');
+            return res.status(404).render('404', { title: 'Incident Not Found' });
         }
-        res.render('incidents/view', { title: 'View Incident', incident });
+
+        res.render('incidents/view', {
+            title: 'View Incident',
+            incident,
+            actionItems, 
+        });
     } catch (error) {
         next(error);
     }
@@ -163,7 +187,12 @@ router.get('/action-items', async (req, res, next) => {
 
 router.get('/action-items/create', (req, res, next) => {
     try {
-        res.render('actionItems/create', { title: 'Create Action Item' });
+        const actionItemStatuses = process.env.ACTION_ITEM_STATUSES.split(',').map(status => status.trim());
+
+        res.render('actionItems/create', {
+            title: 'Create Action Item',
+            actionItemStatuses,
+        });
     } catch (error) {
         next(error);
     }
@@ -173,6 +202,22 @@ router.post('/action-items', async (req, res, next) => {
     try {
         await createActionItem(req.body);
         res.redirect('/action-items');
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post('/action-items/create', async (req, res, next) => {
+    try {
+        const { incident_id } = req.body;
+
+        // Call the controller function to create the action item
+        const newActionItem = await createActionItem(req.body);
+
+        console.log('New Action Item Created:', newActionItem);
+
+        // Redirect back to the edit page for the incident
+        res.redirect(`/incidents/edit/${incident_id}`);
     } catch (error) {
         next(error);
     }
@@ -189,8 +234,22 @@ router.get('/action-items/view/:id', async (req, res, next) => {
 
 router.get('/action-items/edit/:id', async (req, res, next) => {
     try {
-        const actionItem = await getActionItemById(req.params.id);
-        res.render('actionItems/edit', { title: 'Edit Action Item', actionItem });
+        const { id } = req.params;
+        const actionItem = await getActionItemById(id);
+
+        if (!actionItem) {
+            return res.status(404).render('404', { title: 'Action Item Not Found' });
+        }
+
+        const actionItemStatuses = process.env.ACTION_ITEM_STATUSES.split(',').map(status => status.trim());
+
+        console.log({ actionItem, actionItemStatuses }); // Debugging output
+
+        res.render('actionItems/edit', {
+            title: 'Edit Action Item',
+            actionItem,
+            actionItemStatuses,
+        });
     } catch (error) {
         next(error);
     }

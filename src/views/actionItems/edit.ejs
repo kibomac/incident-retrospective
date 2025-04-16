@@ -5,41 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Action Item</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/navigation.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %> <!-- Include the header partial -->
+    <%- include('../partials/header') %> 
 
     <main>
         <div class="container">
-            <h1>Edit Action Item</h1>
-            <% if (actionItem) { %>
-                <form action="/action-items/edit/<%= actionItem.id %>" method="POST">
-                    <div class="form-group">
-                        <label for="incidentTitle">Incident Title:</label>
-                        <input type="text" id="incidentTitle" value="<%= actionItem.incidentTitle %>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="actionItem">Action Item:</label>
-                        <textarea id="actionItem" name="actionItem" required><%= actionItem.actionItem %></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="assignedTo">Assigned To:</label>
-                        <input type="text" id="assignedTo" name="assignedTo" value="<%= actionItem.assignedTo %>">
-                    </div>
-                    <div class="form-group">
-                        <label for="dueDate">Due Date:</label>
-                        <input type="date" id="dueDate" name="dueDate" value="<%= actionItem.dueDate ? actionItem.dueDate.toISOString().split('T')[0] : '' %>">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update Action Item</button>
-                </form>
-                <a href="/incidents/view/<%= actionItem.incidentId %>" class="btn btn-primary">View Incident</a>
-            <% } else { %>
-                <p>Action Item not found.</p>
-            <% } %>
-            <a href="/action-items" class="btn btn-secondary">Back to Action Items</a>
+            <div class="form-group">
+                <% if (actionItem) { %>
+                <div id="editActionItemForm" class="hidden-form">
+                    <%- include('../partials/editActionForm', { incident_id: actionItem.incidentId, actionItemStatuses: actionItemStatuses, actionItem: actionItem }) %>
+                </div>
+                <% } %>
+            </div>
+            <div class="button-group">
+                <% if (actionItem) { %>
+                    <button class="button btn-primary navigate-button" data-url="/incidents/view/<%= actionItem.incidentId %>">View Incident</button>
+                <% } else { %>
+                    <p>Action Item not found.</p>
+                <% } %>
+                <button class="button btn-secondary navigate-button" data-url="/action-items">Back to Action Items</button>
+            </div>
         </div>
     </main>
 
-    <%- include('../partials/footer') %> <!-- Include the footer partial -->
+    <%- include('../partials/footer') %> 
 </body>
 </html>

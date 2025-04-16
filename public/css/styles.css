@@ -345,3 +345,12 @@ main {
     font-size: 12px;
 }
 
+.hidden-form {
+    display: none;
+    margin-top: 20px;
+}
+
+#createActionItemForm {
+    display: none;
+}
+

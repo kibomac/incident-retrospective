@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Incident</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script defer src="/js/editIncident.js"></script> 
 </head>
 <body>
-    <%- include('../partials/header') %> <!-- Include the header partial -->
+    <%- include('../partials/header') %> 
 
     <main>
         <div class="container">
@@ -18,13 +19,18 @@
                 <p><strong>Description:</strong> <%= incident.description %></p>
                 <p><strong>Root Cause:</strong> <%= incident.root_cause %></p>
                 <p><strong>Date:</strong> <%= new Date(incident.createdAt).toLocaleDateString() %></p>
+                <div class="button-group">
+                    <button class="button btn-secondary navigate-button" data-url="/action-items">Back to Action Items</button>
+                </div>
             <% } else { %>
-                <p>Incident not found.</p>
+                    <p>Incident not found.</p>
             <% } %>
-            <a href="/incidents" class="btn btn-secondary">Back to Incidents</a>
+            
+            <%- include('../partials/actionItemsTable', { actionItems: actionItems }) %>
         </div>
+        
     </main>
 
-    <%- include('../partials/footer') %> <!-- Include the footer partial -->
+    <%- include('../partials/footer') %> 
 </body>
 </html>

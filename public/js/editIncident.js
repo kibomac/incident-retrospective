@@ -1,6 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const rootCauseDropdown = document.getElementById('rootCause');
     const statusDropdown = document.getElementById('status');
+    const addActionItemButton = document.getElementById('addActionItemButton');
+    const createActionItemForm = document.getElementById('createActionItemForm');
+
+    // Ensure the form is hidden on page load
+    createActionItemForm.style.display = 'none';
 
     // Fetch root causes from the API
     fetch('/api/root-causes')
@@ -16,8 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 rootCauseDropdown.appendChild(option);
             });
         })
-        .catch(error => {
-            console.error('Error fetching root causes:', error);
+        .catch(() => {
             alert('Failed to load root causes. Please try again later.');
         });
 
@@ -35,8 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusDropdown.appendChild(option);
             });
         })
-        .catch(error => {
-            console.error('Error fetching statuses:', error);
+        .catch(() => {
             alert('Failed to load statuses. Please try again later.');
         });
+
+    // Toggle Create Action Item Form
+    addActionItemButton.addEventListener('click', () => {
+        const isHidden = createActionItemForm.style.display === 'none';
+        createActionItemForm.style.display = isHidden ? 'block' : 'none';
+        addActionItemButton.setAttribute('aria-expanded', isHidden);
+    });
 });
