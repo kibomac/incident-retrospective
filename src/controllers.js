@@ -184,3 +184,15 @@ export const fetchActionItemsByIncidentId = async (incidentId) => {
     const [rows] = await db.query('SELECT * FROM action_items WHERE incident_id = ?', [incidentId]);
     return rows;
 };
+
+export const createUser = async (username, hashedPassword, role) => {
+    try {
+        const [result] = await db.query(
+            'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
+            [username, hashedPassword, role]
+        );
+        return result.insertId; 
+    } catch (error) {
+        throw error; 
+    }
+};

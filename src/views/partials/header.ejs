@@ -7,12 +7,14 @@
                 <% if (user) { %>
                     <li><a href="/dashboard">Dashboard</a></li>
                     <li><a href="/incidents">Incidents</a></li>
-                    <li><a href="/incidents/create">Create Incident</a></li> <!-- Link to the Create Incident page -->
+                    <li><a href="/incidents/create">Create Incident</a></li> 
                     <li><a href="/action-items">Action Items</a></li>
+                    <li><a href="/register">Add New User</a></li>
                     <li><a href="/logout">Logout</a></li>
                     <li>Welcome, <%= user.username %>!</li>
                 <% } else { %>
                     <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
                 <% } %>
             </ul>
         </div>

@@ -18,6 +18,7 @@ import {
     fetchFilteredIncidents,
     fetchFilteredActionItems,
     fetchActionItemsByIncidentId,
+    createUser,
 } from './controllers.js';
 import { getRootCauses, getIncidentStatuses } from './config.js';
 import { ensureAuthenticated } from './middleware/auth.js';
@@ -42,6 +43,37 @@ router.post('/login', async (req, res, next) => {
         res.redirect('/dashboard');
     } catch (error) {
         next(error);
+    }
+});
+
+router.get('/register', (req, res) => {
+    res.render('auth/register', { title: 'Register' });
+});
+
+router.post('/register', async (req, res, next) => {
+    try {
+        const { username, password, role } = req.body;
+
+        if (!username || !password || !role) {
+            return res.status(400).send('All fields are required.');
+        }
+
+        const validRoles = ['business_user', 'admin_user', 'engineer'];
+        if (!validRoles.includes(role)) {
+            return res.status(400).send('Invalid role.');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await createUser(username, hashedPassword, role);
+
+        res.redirect('/login'); 
+    } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            res.status(400).send('Username already exists.');
+        } else {
+            next(error);
+        }
     }
 });
 
