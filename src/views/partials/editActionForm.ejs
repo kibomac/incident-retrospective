@@ -21,5 +21,9 @@
             <% }) %>
         </select>
     </div>
-    <button type="submit" class="button btn btn-primary">Save Changes</button>
+    <div class="button-group">
+        <button type="submit" class="button btn btn-primary">Save Changes</button>
+        <button class="button btn-secondary navigate-button" data-url="/incidents/view/<%= actionItem.incidentId %>">View Incident</button>
+        <button class="button btn-secondary" onclick="window.location.href='/action-items'">Go to Action Items</button>
+    </div>    
 </form>

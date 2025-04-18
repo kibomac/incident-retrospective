@@ -14,19 +14,18 @@
         <div class="container">
             <div class="form-group">
                 <% if (actionItem) { %>
-                <div id="editActionItemForm" class="hidden-form">
+                <div id="editActionItemForm">
                     <%- include('../partials/editActionForm', { incident_id: actionItem.incidentId, actionItemStatuses: actionItemStatuses, actionItem: actionItem }) %>
                 </div>
-                <% } %>
-            </div>
-            <div class="button-group">
-                <% if (actionItem) { %>
-                    <button class="button btn-primary navigate-button" data-url="/incidents/view/<%= actionItem.incidentId %>">View Incident</button>
                 <% } else { %>
                     <p>Action Item not found.</p>
+                    <div class="button-group">
+                        <button class="button btn-primary navigate-button" data-url="/incidents/view/<%= actionItem.incidentId %>">View Incident</button>
+                        <button class="button btn-secondary" onclick="window.location.href='/action-items'">Back to Action Items</button>
+                    </div>
                 <% } %>
-                <button class="button btn-secondary navigate-button" data-url="/action-items">Back to Action Items</button>
             </div>
+            
         </div>
     </main>
 

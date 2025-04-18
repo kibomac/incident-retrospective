@@ -19,6 +19,7 @@ import {
     fetchFilteredActionItems,
     fetchActionItemsByIncidentId,
     createUser,
+    updateActionItem,
 } from './controllers.js';
 import { getRootCauses, getIncidentStatuses } from './config.js';
 import { ensureAuthenticated } from './middleware/auth.js';
@@ -280,6 +281,7 @@ router.get('/action-items/edit/:id', async (req, res, next) => {
         res.render('actionItems/edit', {
             title: 'Edit Action Item',
             actionItem,
+            incident_id: actionItem.incidentId,
             actionItemStatuses,
         });
     } catch (error) {
@@ -289,8 +291,16 @@ router.get('/action-items/edit/:id', async (req, res, next) => {
 
 router.post('/action-items/edit/:id', async (req, res, next) => {
     try {
-        await updateActionItem(req.params.id, req.body);
-        res.redirect('/action-items');
+        const { id } = req.params;
+        const { action_item, assigned_to, due_date, status } = req.body;
+
+        if (!action_item || !assigned_to || !status) {
+            return res.status(400).send('All fields except due date are required.');
+        }
+
+        await updateActionItem(id, { action_item, assigned_to, due_date, status });
+
+        res.redirect(`/incidents/view/${req.body.incident_id}`);
     } catch (error) {
         next(error);
     }

@@ -84,15 +84,13 @@ export const getActionItems = async () => {
 export const createActionItem = async (data) => {
     const { incident_id, action_item, assigned_to, due_date, status } = data;
 
-    // Insert the action item
     const [result] = await db.query(
         'INSERT INTO action_items (incident_id, action_item, assigned_to, due_date, status) VALUES (?, ?, ?, ?, ?)',
         [incident_id, action_item, assigned_to, due_date, status]
     );
 
-    // Fetch the newly created action item using the inserted ID
     const [rows] = await db.query('SELECT * FROM action_items WHERE id = ?', [result.insertId]);
-    return rows[0]; // Return the newly created action item
+    return rows[0]; 
 };
 
 export const getActionItemById = async (id) => {
@@ -109,12 +107,24 @@ export const getActionItemById = async (id) => {
         FROM action_items ai
         WHERE ai.id = ?
     `, [id]);
-    return rows[0]; // Return the first row (single action item)
+    return rows[0]; 
 };
 
-export const updateActionItem = async (id, data) => {
-    const { title, description, incidentId } = data;
-    await db.query('UPDATE action_items SET title = ?, description = ?, incidentId = ? WHERE id = ?', [title, description, incidentId, id]);
+export const updateActionItem = async (id, updatedFields) => {
+    try {
+        const { action_item, assigned_to, due_date, status } = updatedFields;
+
+        await db.query(
+            `
+            UPDATE action_items
+            SET action_item = ?, assigned_to = ?, due_date = ?, status = ?
+            WHERE id = ?
+            `,
+            [action_item, assigned_to, due_date, status, id]
+        );
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const deleteActionItem = async (id) => {
