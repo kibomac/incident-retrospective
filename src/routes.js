@@ -113,8 +113,12 @@ router.get('/incidents', async (req, res, next) => {
 
 router.get('/incidents/create', async (req, res, next) => {
     try {
-        const rootCauses = getRootCauses();
-        res.render('incidents/create', { rootCauses });
+        // Render the create page without a success message
+        res.render('incidents/create', {
+            success: false,
+            incidentId: null,
+            rootCauses: await getRootCauses(), // Pass root causes for the dropdown
+        });
     } catch (error) {
         next(error);
     }
@@ -122,8 +126,19 @@ router.get('/incidents/create', async (req, res, next) => {
 
 router.post('/incidents/create', async (req, res, next) => {
     try {
-        await createIncident(req.body);
-        res.redirect('/incidents');
+        const { title, description, root_cause } = req.body;
+
+        if (!title || !description) {
+            return res.status(400).send('Title and description are required.');
+        }
+
+        const incidentId = await createIncident({ title, description, root_cause });
+
+        res.render('incidents/create', {
+            success: true,
+            incidentId,
+            rootCauses: await getRootCauses(), 
+        });
     } catch (error) {
         next(error);
     }
@@ -218,23 +233,39 @@ router.get('/action-items', async (req, res, next) => {
     }
 });
 
-router.get('/action-items/create', (req, res, next) => {
-    try {
-        const actionItemStatuses = process.env.ACTION_ITEM_STATUSES.split(',').map(status => status.trim());
+router.get('/action-items/create', (req, res) => {
+    const statuses = process.env.ACTION_ITEM_STATUSES.split(',').map(status => status.trim());
 
-        res.render('actionItems/create', {
-            title: 'Create Action Item',
-            actionItemStatuses,
-        });
-    } catch (error) {
-        next(error);
-    }
+    res.render('actionItems/create', {
+        success: false,
+        actionId: null,
+        incidentId: null,
+        statuses, 
+    });
 });
 
 router.post('/action-items', async (req, res, next) => {
     try {
-        await createActionItem(req.body);
-        res.redirect('/action-items');
+        const { incidentId, action_item, assigned_to, due_date, status } = req.body;
+
+        if (!incidentId || !action_item || !assigned_to || !status) {
+            return res.status(400).send('All fields except due date are required.');
+        }
+
+        const actionItem = await createActionItem({
+            incident_id: incidentId,
+            action_item,
+            assigned_to,
+            due_date,
+            status,
+        });
+
+        res.render('actionItems/create', {
+            success: true,
+            actionId: actionItem.id,
+            incidentId: actionItem.incidentId,
+            statuses: process.env.ACTION_ITEM_STATUSES.split(',').map(status => status.trim()),
+        });
     } catch (error) {
         next(error);
     }
@@ -244,12 +275,10 @@ router.post('/action-items/create', async (req, res, next) => {
     try {
         const { incident_id } = req.body;
 
-        // Call the controller function to create the action item
         const newActionItem = await createActionItem(req.body);
 
         console.log('New Action Item Created:', newActionItem);
 
-        // Redirect back to the edit page for the incident
         res.redirect(`/incidents/edit/${incident_id}`);
     } catch (error) {
         next(error);

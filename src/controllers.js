@@ -7,7 +7,13 @@ export const getIncidents = async () => {
 
 export const createIncident = async (data) => {
     const { title, description, root_cause } = data;
-    await db.query('INSERT INTO incidents (title, description, root_cause) VALUES (?, ?, ?)', [title, description, root_cause]);
+
+    const [result] = await db.query(
+        'INSERT INTO incidents (title, description, root_cause) VALUES (?, ?, ?)',
+        [title, description, root_cause]
+    );
+
+    return result.insertId;
 };
 
 export const getIncidentById = async (id) => {
@@ -84,13 +90,12 @@ export const getActionItems = async () => {
 export const createActionItem = async (data) => {
     const { incident_id, action_item, assigned_to, due_date, status } = data;
 
-    const [result] = await db.query(
-        'INSERT INTO action_items (incident_id, action_item, assigned_to, due_date, status) VALUES (?, ?, ?, ?, ?)',
+    const [rows] = await db.query(
+        'CALL CreateActionItem(?, ?, ?, ?, ?)',
         [incident_id, action_item, assigned_to, due_date, status]
     );
 
-    const [rows] = await db.query('SELECT * FROM action_items WHERE id = ?', [result.insertId]);
-    return rows[0]; 
+    return rows[0][0];
 };
 
 export const getActionItemById = async (id) => {
@@ -139,55 +144,23 @@ export const getUserByUsername = async (username) => {
 export const fetchFilteredIncidents = async (filters) => {
     const { startDate, endDate, rootCause, status, assignee } = filters;
 
-    let query = 'SELECT * FROM incidents WHERE 1=1';
-    const params = [];
+    const [incidents] = await db.query(
+        'CALL FetchFilteredIncidents(?, ?, ?, ?, ?)',
+        [startDate || null, endDate || null, rootCause || null, status || null, assignee || null]
+    );
 
-    if (startDate) {
-        query += ' AND created_at >= ?';
-        params.push(startDate);
-    }
-    if (endDate) {
-        query += ' AND created_at <= ?';
-        params.push(endDate);
-    }
-    if (rootCause) {
-        query += ' AND root_cause = ?';
-        params.push(rootCause);
-    }
-    if (status) {
-        query += ' AND status = ?';
-        params.push(status);
-    }
-    if (assignee) {
-        query += ' AND assignee LIKE ?';
-        params.push(`%${assignee}%`);
-    }
-
-    const [incidents] = await db.query(query, params);
-    return incidents;
+    return incidents[0];
 };
 
 export const fetchFilteredActionItems = async (filters) => {
-    const { assignedTo, incidentId, dueDate } = filters;
+    const { assignedTo, incidentId, dueDate, status } = filters;
 
-    let query = 'SELECT * FROM action_items WHERE 1=1';
-    const params = [];
+    const [actionItems] = await db.query(
+        'CALL FetchFilteredActionItems(?, ?, ?, ?)',
+        [assignedTo || null, incidentId || null, dueDate || null, status || null]
+    );
 
-    if (assignedTo) {
-        query += ' AND assigned_to LIKE ?';
-        params.push(`%${assignedTo}%`);
-    }
-    if (incidentId) {
-        query += ' AND incident_id = ?';
-        params.push(incidentId);
-    }
-    if (dueDate) {
-        query += ' AND due_date = ?';
-        params.push(dueDate);
-    }
-
-    const [actionItems] = await db.query(query, params);
-    return actionItems;
+    return actionItems[0];
 };
 
 export const fetchActionItemsByIncidentId = async (incidentId) => {

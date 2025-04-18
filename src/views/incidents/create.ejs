@@ -5,14 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Incident</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <script defer src="/js/createIncident.js"></script> <!-- Link to the JavaScript file -->
+    <script defer src="/js/createIncident.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %> <!-- Include the header partial -->
+    <%- include('../partials/header') %>
 
     <main>
         <div class="container">
             <h1>Create a New Incident</h1>
+
+            <% if (success && incidentId) { %>
+                <div class="alert alert-success">
+                    Incident created successfully! Incident ID: <strong><%= incidentId %></strong>
+                </div>
+            <% } %>
+
             <form action="/incidents/create" method="POST">
                 <div class="form-group">
                     <label for="title">Title</label>
@@ -35,6 +42,6 @@
             </form>
         </div>
     </main>
-    <%- include('../partials/footer') %> <!-- Include the footer partial -->
+    <%- include('../partials/footer') %> 
 </body>
 </html>

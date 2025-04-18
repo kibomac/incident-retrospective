@@ -7,27 +7,49 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <%- include('../partials/header') %> <!-- Include the header partial -->
+    <%- include('../partials/header') %> 
 
     <main>
         <div class="container">
             <h1>Create New Action Item</h1>
+
+            <% if (success && actionId) { %>
+                <div class="alert alert-success">
+                    Action item created successfully! Action Item ID: <strong><%= actionId %></strong>
+                </div>
+            <% } %>
+
             <form action="/action-items" method="POST">
-                <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" id="title" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea id="description" name="description" required></textarea>
-                </div>
                 <div class="form-group">
                     <label for="incidentId">Incident ID:</label>
                     <input type="number" id="incidentId" name="incidentId" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Create Action Item</button>
+                <div class="form-group">
+                    <label for="actionItem">Action Item:</label>
+                    <textarea id="actionItem" name="action_item" placeholder="Enter action item description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="assignedTo">Assigned To:</label>
+                    <input type="text" id="assignedTo" name="assigned_to" placeholder="Enter assignee name" required>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" id="dueDate" name="due_date">
+                </div>
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option value="" disabled selected>Select a status</option>
+                        <% statuses.forEach(status => { %>
+                            <option value="<%= status %>"><%= status %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="button btn-primary">Create Action Item</button>
+                    <a href="/action-items" class="button btn-secondary">Go to Action Items</a>
+                </div>
             </form>
-            <a href="/action-items" class="btn btn-secondary">Back to Action Items</a>
         </div>
     </main>
 
