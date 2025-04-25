@@ -3,12 +3,10 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import {
-    getIncidents,
     createIncident,
     createActionItem,
     getIncidentById,
     updateIncident,
-    getActionItems,
     getActionItemById,
     getIncidentsByMonth,
     getIncidentsByRootCause,
@@ -23,6 +21,7 @@ import {
 } from './controllers.js';
 import { getRootCauses, getIncidentStatuses } from './config.js';
 import { ensureAuthenticated } from './middleware/auth.js';
+import { ensureAdmin } from './middleware/middleware.js';
 
 const router = express.Router();
 
@@ -34,15 +33,22 @@ router.get('/login', (req, res) => res.render('login', { error: null }));
 router.post('/login', async (req, res, next) => {
     try {
         const { username, password } = req.body;
+        console.log('Login attempt:', { username, password });
+
         const user = await getUserByUsername(username);
+        console.log('User found:', user);
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
+            console.log('Invalid credentials');
             return res.render('login', { error: 'Invalid username or password' });
         }
 
         req.session.user = { id: user.id, username: user.username, role: user.role };
+        console.log('Session created:', req.session.user);
+
         res.redirect('/dashboard');
     } catch (error) {
+        console.error('Error in /login route:', error);
         next(error);
     }
 });
@@ -277,8 +283,6 @@ router.post('/action-items/create', async (req, res, next) => {
 
         const newActionItem = await createActionItem(req.body);
 
-        console.log('New Action Item Created:', newActionItem);
-
         res.redirect(`/incidents/edit/${incident_id}`);
     } catch (error) {
         next(error);
@@ -288,8 +292,13 @@ router.post('/action-items/create', async (req, res, next) => {
 router.get('/action-items/view/:id', async (req, res, next) => {
     try {
         const actionItem = await getActionItemById(req.params.id);
+        
+        if (!actionItem) {
+            return res.status(404).send('Action item not found');
+        }
+
         res.render('actionItems/view', { title: 'View Action Item', actionItem });
-    } catch (error) {
+    } catch (error) { 
         next(error);
     }
 });
@@ -304,8 +313,6 @@ router.get('/action-items/edit/:id', async (req, res, next) => {
         }
 
         const actionItemStatuses = process.env.ACTION_ITEM_STATUSES.split(',').map(status => status.trim());
-
-        console.log({ actionItem, actionItemStatuses }); // Debugging output
 
         res.render('actionItems/edit', {
             title: 'Edit Action Item',
@@ -402,6 +409,38 @@ router.get('/health', (req, res) => res.status(200).json({ status: 'OK', uptime:
 
 router.get('/logout', (req, res) => {
     req.session.destroy(() => res.redirect('/'));
+});
+
+router.get('/forbidden', (req, res) => {
+    res.status(403).send('403 Forbidden');
+});
+
+router.get('/admin', ensureAdmin, (req, res) => {
+    res.send('Welcome to the admin panel');
+});
+
+router.get('/valid-route', (req, res) => {
+    res.status(200).send('Valid Route');
+});
+
+router.get('/unauthorized', (req, res) => {
+    res.status(401).send('401 Unauthorized');
+});
+
+router.get('/bad-request', (req, res) => {
+    res.status(400).send('400 Bad Request');
+});
+
+router.get('/method-not-allowed', (req, res) => {
+    res.status(200).send('GET method is allowed');
+});
+
+router.all('/method-not-allowed', (req, res) => {
+    res.status(405).send('405 Method Not Allowed');
+});
+
+router.get('/error', (req, res) => {
+    res.status(500).send('500 Internal Server Error');
 });
 
 export default router;

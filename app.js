@@ -4,7 +4,7 @@ import session from 'express-session';
 import router from './src/routes.js';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import { configureSession, passUserToViews, addHelpersToViews } from './src/middleware/middleware.js';
+import { configureSession, passUserToViews, addHelpersToViews, notFoundHandler, errorHandler } from './src/middleware/middleware.js';
 import { config } from './src/config.js';
 
 const app = express();
@@ -47,10 +47,8 @@ app.use(passUserToViews);
 
 app.use(router);
 
-app.use((err, req, res, next) => {
-    res.status(err.status || 500).render('error', { message: err.message || 'Internal Server Error' });
-});
+app.use(notFoundHandler);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.use(errorHandler);
+
+export default app;

@@ -1,7 +1,8 @@
 import db from '../db.js';
 
 export const getIncidents = async () => {
-    const [rows] = await db.query('SELECT id, title, description, root_cause, created_at AS createdAt FROM incidents');
+    const result = await db.query('CALL GetIncidents()');
+    const rows = Array.isArray(result) && Array.isArray(result[0]) ? result[0][0] : [];
     return rows;
 };
 
@@ -9,11 +10,12 @@ export const createIncident = async (data) => {
     const { title, description, root_cause } = data;
 
     const [result] = await db.query(
-        'INSERT INTO incidents (title, description, root_cause) VALUES (?, ?, ?)',
+        'CALL CreateIncident(?, ?, ?)',
         [title, description, root_cause]
     );
 
-    return result.insertId;
+
+    return { id: result[0]?.id || result.insertId };
 };
 
 export const getIncidentById = async (id) => {
@@ -21,14 +23,12 @@ export const getIncidentById = async (id) => {
     return rows[0];
 };
 
-export const updateIncident = async (id, { title, description, root_cause }) => {
-    const query = `
-        UPDATE incidents
-        SET title = ?, description = ?, root_cause = ?
-        WHERE id = ?
-    `;
-    const values = [title, description, root_cause, id];
-    await db.query(query, values);
+export const updateIncident = async (id, { title, description, root_cause, status }) => {
+    const [result] = await db.query(
+        'CALL UpdateIncident(?, ?, ?, ?, ?)',
+        [id, title, description, root_cause, status]
+    );
+    return result;
 };
 
 export const getIncidentsByMonth = async () => {
@@ -99,46 +99,43 @@ export const createActionItem = async (data) => {
 };
 
 export const getActionItemById = async (id) => {
-    const [rows] = await db.query(`
-        SELECT 
-            ai.id, 
-            ai.incident_id AS incidentId, 
-            ai.action_item AS actionItem, 
-            ai.assigned_to AS assignedTo, 
-            ai.due_date AS dueDate, 
-            ai.status AS status, 
-            ai.created_at AS createdAt, 
-            ai.updated_at AS updatedAt 
-        FROM action_items ai
-        WHERE ai.id = ?
-    `, [id]);
-    return rows[0]; 
+    const [rows] = await db.query('CALL GetActionItemById(?)', [id]);
+    return rows[0][0];
 };
 
 export const updateActionItem = async (id, updatedFields) => {
     try {
         const { action_item, assigned_to, due_date, status } = updatedFields;
 
-        await db.query(
-            `
-            UPDATE action_items
-            SET action_item = ?, assigned_to = ?, due_date = ?, status = ?
-            WHERE id = ?
-            `,
-            [action_item, assigned_to, due_date, status, id]
+        const [result] = await db.query(
+            'CALL UpdateActionItem(?, ?, ?, ?, ?)',
+            [id, action_item, assigned_to, due_date, status]
         );
+
+        return result;
     } catch (error) {
         throw error;
     }
 };
 
 export const deleteActionItem = async (id) => {
-    await db.query('DELETE FROM action_items WHERE id = ?', [id]);
+    try {
+        const [result] = await db.query('CALL DeleteActionItem(?)', [id]);
+        return result;
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const getUserByUsername = async (username) => {
-    const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
-    return rows[0];
+    try {
+        const [rows] = await db.query('CALL GetUserByUsername(?)', [username]);
+        console.log('Database query result:', rows); // Debugging log
+        return rows[0][0];
+    } catch (error) {
+        console.error('Database error:', error);
+        throw new Error('Database error');
+    }
 };
 
 export const fetchFilteredIncidents = async (filters) => {
@@ -164,14 +161,17 @@ export const fetchFilteredActionItems = async (filters) => {
 };
 
 export const fetchActionItemsByIncidentId = async (incidentId) => {
-    const [rows] = await db.query('SELECT * FROM action_items WHERE incident_id = ?', [incidentId]);
-    return rows;
+    const [rows] = await db.query(
+        'CALL FetchActionItemsByIncidentId(?)',
+        [incidentId]
+    );
+    return rows[0];
 };
 
 export const createUser = async (username, hashedPassword, role) => {
     try {
         const [result] = await db.query(
-            'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
+            'CALL CreateUser(?, ?, ?)',
             [username, hashedPassword, role]
         );
         return result.insertId; 

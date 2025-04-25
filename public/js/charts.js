@@ -1,10 +1,7 @@
-console.log('charts.js loaded');
 // Monthly Incidents Chart
 fetch('/api/incidents')
     .then(response => response.json())
     .then(data => {
-        console.log('Fetched Incidents Data:', data); // Debugging log
-        // Render the chart here
         const labels = data.map(item => item.month);
         const counts = data.map(item => item.count);
 

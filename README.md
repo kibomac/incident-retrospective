@@ -1,6 +1,7 @@
 # Incident Retrospective Application
 
 ## Table of Contents
+
 1. [Project Overview](#project-overview)
 2. [Features](#features)
 3. [Folder Structure](#folder-structure)
@@ -12,11 +13,13 @@
 ---
 
 ## 1. Project Overview
+
 The **Incident Retrospective Application** is a web-based tool designed to manage incidents and their associated action items. It allows users to create, view, edit, and delete incidents and action items, assign responsibilities, and track progress.
 
 ---
 
 ## 2. Features
+
 - **Incident Management**:
   - Create, view, edit, and delete incidents.
   - Assign root causes and descriptions to incidents.
@@ -32,19 +35,18 @@ The **Incident Retrospective Application** is a web-based tool designed to manag
 
 ## 3. Folder Structure
 
-/src 
-├── controllers/ # Business logic and database interaction 
-├── models/ # Database models (if applicable) 
-├── routes/ # API and web routes 
-├── views/ # EJS templates for rendering pages 
-│ ├── incidents/ # Incident-related views 
-│ ├── actionItems/ # Action item-related views 
-│ ├── partials/ # Shared partial templates (e.g., header, footer) 
-├── public/ # Static assets (CSS, JS, images) 
-│ ├── css/ # Stylesheets 
-│ ├── js/ # Client-side JavaScript 
-├── .env # Environment variables 
-├── app.js # Main application entry point 
+/src
+├── controllers/ # Business logic and database interaction
+├── routes/ # API and web routes
+├── views/ # EJS templates for rendering pages
+│ ├── incidents/ # Incident-related views
+│ ├── actionItems/ # Action item-related views
+│ ├── partials/ # Shared partial templates (e.g., header, footer)
+├── public/ # Static assets (CSS, JS, images)
+│ ├── css/ # Stylesheets
+│ ├── js/ # Client-side JavaScript
+├── .env # Environment variables
+├── app.js # Main application entry point
 ├── README.md # Documentation file
 
 ---
@@ -52,8 +54,9 @@ The **Incident Retrospective Application** is a web-based tool designed to manag
 ## 4. API Endpoints
 
 ### **Incidents**
+
 | Method | Endpoint               | Description                     |
-|--------|-------------------------|---------------------------------|
+|--------|------------------------|---------------------------------|
 | GET    | `/incidents`           | View all incidents              |
 | GET    | `/incidents/create`    | Render the create incident page |
 | POST   | `/incidents/create`    | Create a new incident           |
@@ -62,8 +65,9 @@ The **Incident Retrospective Application** is a web-based tool designed to manag
 | POST   | `/incidents/delete/:id`| Delete an incident              |
 
 ### **Action Items**
+
 | Method | Endpoint                  | Description                          |
-|--------|----------------------------|--------------------------------------|
+|--------|---------------------------|--------------------------------------|
 | GET    | `/action-items`           | View all action items                |
 | GET    | `/action-items/create`    | Render the create action item page   |
 | POST   | `/action-items`           | Create a new action item             |
@@ -76,14 +80,17 @@ The **Incident Retrospective Application** is a web-based tool designed to manag
 ## 5. Installation
 
 ### **Prerequisites**
+
 - Node.js (v14 or higher)
 - MySQL database
 
 ### **Steps**
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd incident-retrospective
+
+1. Unzip the zip file of the project folder and open it with VS Code or your choice of IDE.
+    Alternatively clone the repository from GIT if you have access:
+        ```bash
+        git clone <repository-url>
+        cd incident-retrospective
 
 2. Install dependencies:
     npm install
@@ -113,7 +120,7 @@ The **Incident Retrospective Application** is a web-based tool designed to manag
         npm start
     Access the Application
         - Open your browser and navigate to:
-            http://localhost:3000   
+            <http://localhost:3000>
 
 7. Environment Variables
 |  Endpoint              | Description                          |
@@ -136,7 +143,6 @@ Notes:
     - Ensure the database is running before starting the application.
     - Use the provided SQL schema to set up the database tables.
 
-
 8. Using Seed Data Scripts
     Purpose
         The seed data scripts are used to populate the database with initial data for testing and development purposes.
@@ -149,12 +155,12 @@ Notes:
             node seedUsers.js
     3. Verify the data:
         - Check the database to ensure the tables are populated with the seed data.
-    
+
     Seed Data Includes
         - Users: Predefined users for testing.
         - Incidents: Sample incidents with various statuses and root causes.
         - Action Items: Sample action items linked to incidents.
-    
+
     Notes
     Ensure the database is running before starting the application.
     Use the seed data scripts to quickly populate the database for testing.
