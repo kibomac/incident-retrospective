@@ -20,7 +20,7 @@
     "faker": "^6.6.6",
     "helmet": "^8.1.0",
     "mysql": "^2.18.1",
-    "mysql2": "^3.14.0"
+    "mysql2": "^3.14.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
